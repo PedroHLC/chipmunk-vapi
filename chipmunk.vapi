@@ -1,4 +1,4 @@
-//FOR: Chipmunk 6.2.1
+//FOR: !!CURRENTLY UNASABLE - IN TRANSION FROM Chipmunk 6.2.1 TO 7.0.0
 //TODO: remove '_private' variables;
 //Maintainer: PedroHLC
 
@@ -68,6 +68,8 @@ namespace cp {
 		public void apply_impulse (cp.Vect j, cp.Vect r);
 		[CCode (cname = "cpBodyEachArbiter")]
 		public void each_arbiter (cp.BodyArbiterIteratorFunc func, void* data);
+		[CCode (cname = "cpClosetPointOnSegment")]
+		public cp.Vect closest_point_on_segment (cp.Vect p, cp.Vect a, cp.Vect b);
 		[CCode (cname = "cpBodyEachConstraint")]
 		public void each_constraint (cp.BodyConstraintIteratorFunc func, void* data);
 		[CCode (cname = "cpBodyEachShape")]
@@ -553,7 +555,7 @@ namespace cp {
 		[CCode (cname = "cpSpaceAddStaticShape")]
 		public unowned cp.Shape add_static_shape (cp.Shape shape);
 		[CCode (cname = "cpSpaceBBQuery")]
-		public void b_b_query (cp.BB bb, cp.Layers layers, cp.Group group, cp.SpaceBBQueryFunc func, void* data);
+		public void b_b_query (cp.BB bb, cp.ShapeFilter filter, cp.SpaceBBQueryFunc func, void* data);
 		[CCode (cname = "cpSpaceContainsBody")]
 		public bool contains_body (cp.Body body);
 		[CCode (cname = "cpSpaceContainsConstraint")]
@@ -1089,9 +1091,9 @@ namespace cp {
 	[CCode (cname = "cpMomentForCircle")]
 	public static double moment_for_circle (double m, double r1, double r2, cp.Vect offset);
 	[CCode (cname = "cpMomentForPoly")]
-	public static double moment_for_poly (double m, int num_verts, [CCode (array_length_pos = 1.9)] cp.Vect[] verts, cp.Vect offset);
+	public static double moment_for_poly (double m, [CCode (array_length_pos = 1.5)] cp.Vect[] verts, cp.Vect offset, double radius);
 	[CCode (cname = "cpMomentForSegment")]
-	public static double moment_for_segment (double m, cp.Vect a, cp.Vect b);
+	public static double moment_for_segment (double m, cp.Vect a, double b);
 	
 	[CCode (cheader_filename = "chipmunk/chipmunk.h")]
 	public struct SegmentQueryInfo {
@@ -1242,9 +1244,9 @@ namespace cp {
 	[CCode (cheader_filename = "chipmunk/chipmunk.h", cname = "cpAreaForCircle")]
 	public static double area_for_circle (double r1, double r2);
 	[CCode (cheader_filename = "chipmunk/chipmunk.h", cname = "cpAreaForPoly")]
-	public static double area_for_poly (int num_verts, out cp.Vect verts);
+	public static double area_for_poly ([CCode (array_length_pos = 0.5)] cp.Vect[] verts, double radius);
 	[CCode (cheader_filename = "chipmunk/chipmunk.h", cname = "cpAreaForSegment")]
-	public static double area_for_segment (cp.Vect a, cp.Vect b, double r);
+	public static double area_for_segment (cp.Vect a, cp.Vect b, double radius);
 	
 	[CCode (cheader_filename = "chipmunk/chipmunk.h", free_function = "cpShapeFree", destroy_function = "cpShapeDestroy")]
 	[Compact]
@@ -1263,8 +1265,6 @@ namespace cp {
 	public static int convex_hull (int count, out cp.Vect verts, out cp.Vect _result, int first, double tol);
 	[CCode (cheader_filename = "chipmunk/chipmunk.h", cname = "cpEnableSegmentToSegmentCollisions")]
 	public static void enable_segment_to_segment_collisions ();
-	[CCode (cheader_filename = "chipmunk/chipmunk.h", cname = "cpRecenterPoly")]
-	public static void recenter_poly (int num_verts, out cp.Vect verts);
 	[CCode (cheader_filename = "chipmunk/chipmunk.h", cname = "cpSpatialIndexCollideStatic")]
 	public static void spatial_index_collide_static (cp.SpatialIndex dynamic_index, cp.SpatialIndex static_index, cp.SpatialIndexQueryFunc func, void* data);
 	
